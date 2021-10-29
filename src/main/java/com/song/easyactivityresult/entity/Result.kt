@@ -1,5 +1,7 @@
 package com.song.easyactivityresult.entity
 
+import android.content.Intent
+
 /**
  * Created by SongWenjun
  * 2021/10/12
@@ -9,5 +11,8 @@ package com.song.easyactivityresult.entity
  *     乚― J               ???
  * This class is ...
  */
-class Result {
-}
+data class Result (
+    var requestCode: Int,
+    var resultCode:Int,
+    var data: Intent?
+)

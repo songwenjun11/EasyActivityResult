@@ -3,6 +3,8 @@ package com.song.easyactivityresult.utils
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import com.song.easyactivityresult.activity.ExcessiveActivity
+import com.song.easyactivityresult.entity.Result
 
 /**
  * Created by SongWenjun
@@ -15,18 +17,9 @@ import android.content.Intent
  */
 class EasyActivityResult private constructor() {
 
-    lateinit var callBack: (requestCode: Int, resultCode: Int, data: Intent) -> Unit
-
     companion object {
-        @JvmStatic
-        private var easyActivityResult: EasyActivityResult? = null
+        var easyActivityResult: EasyActivityResult? = null
 
-        @JvmStatic
-        fun init(context: Context) {
-
-        }
-
-        @JvmStatic
         fun getInstance(): EasyActivityResult {
             if (easyActivityResult == null) {
                 synchronized(EasyActivityResult::class.java) {
@@ -40,9 +33,15 @@ class EasyActivityResult private constructor() {
     }
 
     fun startIntent(
-        activity: Activity?,
-        callBack: (requestCode: Int, resultCode: Int, data: Intent) -> Unit
-    ) {
-        this.callBack = callBack
+        context: Activity,
+        intent: Intent,
+        call: (Result) -> Unit
+    ): EasyActivityResult {
+        ResultCallBack.getInstance().intent = intent
+        ResultCallBack.getInstance().resultCode = 10
+        ResultCallBack.getInstance().call = call
+        val i = Intent(context, ExcessiveActivity::class.java)
+        context.startActivityForResult(i, ResultCallBack.getInstance().resultCode)
+        return getInstance()
     }
 }
