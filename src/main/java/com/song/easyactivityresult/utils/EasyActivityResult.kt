@@ -19,8 +19,10 @@ class EasyActivityResult private constructor() {
 
     companion object {
         var easyActivityResult: EasyActivityResult? = null
+        lateinit var context: Activity
 
-        fun getInstance(): EasyActivityResult {
+        fun getInstance(context: Activity): EasyActivityResult {
+            this.context = context
             if (easyActivityResult == null) {
                 synchronized(EasyActivityResult::class.java) {
                     if (easyActivityResult == null) {
@@ -33,15 +35,15 @@ class EasyActivityResult private constructor() {
     }
 
     fun startIntent(
-        context: Activity,
+        requestCode:Int,
         intent: Intent,
         call: (Result) -> Unit
     ): EasyActivityResult {
         ResultCallBack.getInstance().intent = intent
-        ResultCallBack.getInstance().resultCode = 10
+        ResultCallBack.getInstance().resultCode = requestCode
         ResultCallBack.getInstance().call = call
         val i = Intent(context, ExcessiveActivity::class.java)
-        context.startActivityForResult(i, ResultCallBack.getInstance().resultCode)
-        return getInstance()
+        context.startActivityForResult(i, requestCode)
+        return easyActivityResult!!
     }
 }
