@@ -26,8 +26,11 @@ class ExcessiveActivity : Activity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        setResult(requestCode, data)
         ResultCallBack.getInstance().call(requestCode, resultCode, data)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
         finish()
     }
 }

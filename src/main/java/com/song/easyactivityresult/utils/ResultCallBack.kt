@@ -14,15 +14,25 @@ import com.song.easyactivityresult.entity.Result
  */
 class ResultCallBack private constructor() {
     var call: ((result: Result) -> Unit)? = null
-    var intent:Intent? = null
+    var intent: Intent? = null
     var resultCode = 0
 
     companion object {
         @JvmStatic
-        private val resultCallBack: ResultCallBack = ResultCallBack()
+        private var resultCallBack: ResultCallBack? = null
 
         @JvmStatic
-        fun getInstance() = resultCallBack
+        @Synchronized
+        fun getInstance(): ResultCallBack {
+            if (resultCallBack == null) {
+                synchronized(ResultCallBack::class.java) {
+                    if (resultCallBack == null) {
+                        resultCallBack = ResultCallBack()
+                    }
+                }
+            }
+            return resultCallBack!!
+        }
     }
 
     fun call(requestCode: Int, resultCode: Int, data: Intent?) {
